@@ -5,7 +5,6 @@ import * as SelectPrimitive from "@radix-ui/react-select"
 import { Check, ChevronDown, ChevronUp, Plus } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "./button"
 
 const Select = SelectPrimitive.Root
 
@@ -20,7 +19,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-start rounded-md bg-inherit text-sm gap-1.5 focus:outline-none hover:text-black hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 dark:border-neutral-800 dark:bg-neutral-950 dark:ring-offset-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-neutral-300",
+      "flex h-[26px] w-full items-center justify-start rounded-md bg-inherit text-sm gap-1.5 focus:outline-none hover:text-black hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 dark:border-neutral-800 dark:bg-neutral-950 dark:ring-offset-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-neutral-300",
       className
     )}
     {...props}

@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import RecipientInput from "./RecipientInput";
+import emails from "@/lib/emails";
 import { toast } from "sonner";
 
 export default function EmailForm() {
 	const [selectedSender, setSelectedSender] = useState<string | undefined>(undefined);
-	const [recipients, setRecipients] = useState<any[]>([]);
+	const [recipients, setRecipients] = useState<any[]>(emails);
 	const [subject, setSubject] = useState("");
 	const [message, setMessage] = useState("");
 	const [recipientInputOpen, setRecipientInputOpen] = useState(false)
@@ -21,6 +22,8 @@ export default function EmailForm() {
 			if (!recipients.includes(email)) {
 				setRecipients([...recipients, email])
 				setRecipientInputOpen(false)
+			} else {
+				toast("Duplicate", { description: `The email ${email} already exists in this list` })
 			}
 		} else {
 			toast("Email Error", {
@@ -59,9 +62,9 @@ export default function EmailForm() {
 	}
 
 	return (
-		<div className="w-full max-w-[720px] max-h-[557px] p-3 bg-graylight2 border-graylight6 border rounded-xl shadow-custom backdrop-blur-md ">
+		<div className="w-full max-w-[720px] md:max-h-[557px] p-3 bg-graylight2 border-graylight6 border rounded-xl shadow-custom backdrop-blur-md ">
 			<div className="grid gap-3">
-				<div className="grid grid-cols-2 sm:grid-cols-4 items-center gap-3 py-0.5">
+				<div className="grid grid-cols-4 items-center gap-3 py-0.5">
 					<label htmlFor="from" className="text-sm font-medium col-span-1">
 						From
 					</label>
@@ -82,14 +85,14 @@ export default function EmailForm() {
 					</Select>
 				</div>
 				<RecipientInput setRecipientInputOpen={setRecipientInputOpen} recipientInputOpen={recipientInputOpen} recipients={recipients} addRecipient={addRecipient} removeRecipient={removeRecipient} />
-				<div className="items-center grid sm:grid-cols-4 gap-3">
+				<div className="items-center grid grid-cols-4 gap-3">
 					<label htmlFor="subject" className="text-sm col-span-1 font-medium">
 						Subject
 					</label>
 					<Input
 						value={subject}
 						onChange={(e) => setSubject(e.target.value)}
-						placeholder="Email Subject..." id="subject" className="border-0 bg-inherit outline-0 sm:col-span-3" />
+						placeholder="Email Subject..." id="subject" className=" h-[26px] border-0 hover:bg-white bg-inherit outline-0 col-span-3" />
 				</div>
 				<hr className="border-t-graylight6" />
 				<div className="w-full h-full">
@@ -99,7 +102,7 @@ export default function EmailForm() {
 					<Textarea
 						id="message"
 						placeholder="Mention fields with '@' and write your message"
-						className="resize-none overflow-hidden bg-white w-full p-3 rounded-xl border-0 shadow-sm"
+						className="resize-none focus:ring-0 focus:border overflow-hidden bg-white w-full p-3 rounded-xl border-0 shadow-sm"
 						rows={14}
 						value={message}
 						onChange={(e) => setMessage(e.target.value)}
