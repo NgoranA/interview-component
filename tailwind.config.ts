@@ -23,8 +23,10 @@ const config = {
         "linear-blue-to": "#006ADC",
         "graylight6": "#E2E2E2",
         "graylight2": "#F8F8F8",
-        "grayshaddow": "#E0E0E0",
         "graylight11": "#6F6F6F"
+      },
+      boxShadow: {
+        custom: '0px 0px 12px 0px #E0E0E0'
       },
       lineHeight: {
         '22.4': "22.4px"

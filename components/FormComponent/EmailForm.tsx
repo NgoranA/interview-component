@@ -16,9 +16,17 @@ export default function EmailForm() {
 	const [recipientInputOpen, setRecipientInputOpen] = useState(false)
 
 	const addRecipient = (email: any) => {
-		if (!recipients.includes(email)) {
-			setRecipients([...recipients, email])
-			setRecipientInputOpen(false)
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+		if (emailRegex.test(email)) {
+			if (!recipients.includes(email)) {
+				setRecipients([...recipients, email])
+				setRecipientInputOpen(false)
+			}
+		} else {
+			toast("Email Error", {
+				duration: 3000,
+				description: "Email is not a valid email"
+			})
 		}
 	}
 
@@ -27,11 +35,15 @@ export default function EmailForm() {
 	};
 
 	const handleToast = () => {
-
-		toast("Email Sent", {
-			description: `
+		if (!message || !selectedSender || !subject || recipients.length === 0) {
+			toast("Validation Error", {
+				description: "All fields are compulsary"
+			})
+		} else {
+			toast("Email Sent", {
+				description: `
           Email sent successfully!
-		<br />
+		    <br />
           From: ${selectedSender}
           <br />
           To: ${recipients.join(", ")}
@@ -40,13 +52,14 @@ export default function EmailForm() {
           <br />
           Message: ${message}
         `,
-			duration: 3000
+				duration: 3000
+			}
+			)
 		}
-		)
 	}
 
 	return (
-		<div className="w-full max-w-[720px] max-h-[557px] p-3 bg-graylight2 border-graylight6 border rounded-xl shadow-md backdrop-blur-md ">
+		<div className="w-full max-w-[720px] max-h-[557px] p-3 bg-graylight2 border-graylight6 border rounded-xl shadow-custom backdrop-blur-md ">
 			<div className="grid gap-3">
 				<div className="grid grid-cols-2 sm:grid-cols-4 items-center gap-3 py-0.5">
 					<label htmlFor="from" className="text-sm font-medium col-span-1">
@@ -61,9 +74,9 @@ export default function EmailForm() {
 						</SelectTrigger>
 						<SelectContent>
 							<SelectGroup>
-								<SelectItem value="john@example.com">John Doe</SelectItem>
-								<SelectItem value="jane@example.com">Jane Smith</SelectItem>
-								<SelectItem value="bob@example.com">Bob Johnson</SelectItem>
+								<SelectItem value="ngoranaristide@gmail.com">Ngoran Aristide</SelectItem>
+								<SelectItem value="speedarisbuzz.sa@gmail.com">Speedy Aristotle</SelectItem>
+								<SelectItem value="n.arise442@gmail.com">Arc Arise</SelectItem>
 							</SelectGroup>
 						</SelectContent>
 					</Select>
