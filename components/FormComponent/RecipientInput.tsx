@@ -3,9 +3,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@radix-ui/react-select";
 import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
-import { ChevronDownIcon } from "lucide-react";
 
 interface RecipientInputProps {
 	recipients: string[];
@@ -36,14 +34,7 @@ function XIcon(props: any) {
 }
 
 export default function RecipientInput({ recipients, addRecipient, removeRecipient, recipientInputOpen, setRecipientInputOpen }: RecipientInputProps) {
-	const [emailInput, setEmailInput] = useState("");
 
-	const handleKeyDown = (e: any) => {
-		if (e.key === "Enter") {
-			addRecipient(emailInput);
-			setEmailInput("");
-		}
-	};
 
 	return (
 
@@ -77,8 +68,11 @@ export default function RecipientInput({ recipients, addRecipient, removeRecipie
 									<Button
 										type="button"
 										onClick={() => {
-											const email = document.getElementById("to").value
-											addRecipient(email)
+											const inputElement = document.getElementById("to") as HTMLInputElement;
+											const email = inputElement.value
+											if (email) {
+												addRecipient(email)
+											}
 										}}
 									>
 										Add
