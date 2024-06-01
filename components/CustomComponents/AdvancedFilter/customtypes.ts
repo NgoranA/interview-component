@@ -1,4 +1,3 @@
-// types.ts
 export interface Person {
 	id: string;
 	name: string;

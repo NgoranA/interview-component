@@ -1,12 +1,9 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { SVGProps } from "react";
-import { ArrowUpRight, AudioLines, Building, Building2, CommandIcon, FolderSearch, GanttChart, Globe, Linkedin, LinkedinIcon, Mail, Plus, Sandwich, SearchIcon, Users } from "lucide-react";
-import Link from "next/link";
+import { AudioLines, CommandIcon, FolderSearch, GanttChart, Plus, SearchIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import people from "@/lib/persons";
