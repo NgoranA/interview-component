@@ -36,7 +36,7 @@ export default function AdvancedComponent() {
 				<Label className="block font-normal mb-2">Search people</Label>
 				<CardContent className="p-0">
 					{people.filter(person => person.name.toLowerCase().includes(searchTerm.toLowerCase())).map(person => (
-						<ItemComponent item={person} />
+						<ItemComponent key={person.id} item={person} />
 					))}
 				</CardContent>
 			</Card>
@@ -44,7 +44,7 @@ export default function AdvancedComponent() {
 				<Label className="block font-normal mb-2">Search companies</Label>
 				<CardContent className="p-0">
 					{companies.filter(company => company.name.toLowerCase().includes(searchTerm.toLowerCase())).map(company => (
-						<ItemComponent item={company} />
+						<ItemComponent item={company} key={company.id} />
 					))}
 				</CardContent>
 			</Card>
