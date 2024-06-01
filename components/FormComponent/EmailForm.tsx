@@ -1,29 +1,57 @@
 "use client";
 
 import { useState } from "react";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import RecipientInput from "./RecipientInput";
+
 import emails from "@/lib/emails";
 import { toast } from "sonner";
 
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Plus } from "lucide-react";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
+
+
+type Sender = {
+	email: string,
+	name: string
+}
+const senders: Sender[] = [
+	{ email: "alice@example.com", name: "Alice Johnson" },
+	{ email: "bob@example.com", name: "Bob Smith" },
+	{ email: "carol@example.com", name: "Carol Davis" },
+	{ email: "dave@example.com", name: "Dave Wilson" },
+	{ email: "eve@example.com", name: "Eve Clark" },
+	{ email: "frank@example.com", name: "Frank Miller" },
+	{ email: "grace@example.com", name: "Grace Lee" },
+	{ email: "henry@example.com", name: "Henry Young" },
+	{ email: "irene@example.com", name: "Irene Walker" },
+	{ email: "jack@example.com", name: "Jack Hall" },
+];
+
 export default function EmailForm() {
-	const [selectedSender, setSelectedSender] = useState<string | undefined>(undefined);
+
+	const [selectedSender, setSelectedSender] = useState<Sender | null>(null);
 	const [recipients, setRecipients] = useState<any[]>(emails);
 	const [subject, setSubject] = useState("");
 	const [message, setMessage] = useState("");
-	const [recipientInputOpen, setRecipientInputOpen] = useState(false)
+	const [recipientInputOpen, setRecipientInputOpen] = useState<boolean>(false)
+	const [openSelectUser, setOpenSelectUser] = useState<boolean>(false)
+	const [toggleCC, setToggleCC] = useState<number>(1)
 
-	const addRecipient = (email: any) => {
+
+	const addRecipient = (recipient: { email: string, id: number }) => {
+
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-		if (emailRegex.test(email)) {
-			if (!recipients.includes(email)) {
-				setRecipients([...recipients, email])
+
+		if (emailRegex.test(recipient.email)) {
+			if (!recipients.includes(recipient.email)) {
+				setRecipients([...recipients, recipient.email])
 				setRecipientInputOpen(false)
 			} else {
-				toast("Duplicate", { description: `The email ${email} already exists in this list` })
+				toast("Duplicate", { description: `The email ${recipient.email} already exists in this list` })
 			}
 		} else {
 			toast("Email Error", {
@@ -33,8 +61,8 @@ export default function EmailForm() {
 		}
 	}
 
-	const removeRecipient = (email: any) => {
-		setRecipients(recipients.filter((r) => r !== email));
+	const removeRecipient = (recipient: { email: string, id: number }) => {
+		setRecipients(recipients.filter((r) => r !== recipient.email));
 	};
 
 	const handleToast = () => {
@@ -46,7 +74,7 @@ export default function EmailForm() {
 			setRecipients([]),
 				setMessage(""),
 				setSubject("")
-			setSelectedSender(undefined)
+			setSelectedSender(null)
 			toast("Email Sent", {
 				description: "Email sent successfully",
 				duration: 3000
@@ -61,23 +89,20 @@ export default function EmailForm() {
 					<label htmlFor="from" className="text-sm font-medium col-span-1">
 						From
 					</label>
-					<Select
-						value={selectedSender}
-						onValueChange={setSelectedSender}
-					>
-						<SelectTrigger>
-							<SelectValue placeholder="Select sender" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectGroup>
-								<SelectItem value="ngoranaristide@gmail.com">Ngoran Aristide</SelectItem>
-								<SelectItem value="speedarisbuzz.sa@gmail.com">Speedy Aristotle</SelectItem>
-								<SelectItem value="n.arise442@gmail.com">Arc Arise</SelectItem>
-							</SelectGroup>
-						</SelectContent>
-					</Select>
+					<Popover open={openSelectUser} onOpenChange={setOpenSelectUser}>
+						<PopoverTrigger asChild>
+							<Button variant="ghost" className="w-full px-1.5 py-0.5 bg-inherit justify-start gap-[6px]">
+								<Plus className="h-4 w-4" />{selectedSender ? <>{selectedSender.name}</> : <>  Set status</>}
+							</Button>
+						</PopoverTrigger>
+						<PopoverContent className="w-[200px] p-0" align="start">
+							<StatusList setOpen={setOpenSelectUser} setSelectedSender={setSelectedSender} />
+						</PopoverContent>
+					</Popover>
 				</div>
-				<RecipientInput setRecipientInputOpen={setRecipientInputOpen} recipientInputOpen={recipientInputOpen} recipients={recipients} addRecipient={addRecipient} removeRecipient={removeRecipient} />
+
+				<RecipientInput setRecipientInputOpen={setRecipientInputOpen} toggleCC={toggleCC} setToggleCC={setToggleCC} recipientInputOpen={recipientInputOpen} recipients={recipients} addRecipient={addRecipient} removeRecipient={removeRecipient} />
+
 				<div className="items-center grid grid-cols-4 gap-3">
 					<label htmlFor="subject" className="text-sm col-span-1 font-medium">
 						Subject
@@ -85,7 +110,7 @@ export default function EmailForm() {
 					<Input
 						value={subject}
 						onChange={(e) => setSubject(e.target.value)}
-						placeholder="Email Subject..." id="subject" className=" h-[26px] border-0 hover:bg-white bg-inherit outline-0 col-span-3" />
+						placeholder="Email Subject..." id="subject" className=" h-7 border-0 hover:bg-white bg-inherit outline-0 col-span-3" />
 				</div>
 				<hr className="border-t-graylight6" />
 				<div className="w-full h-full">
@@ -104,5 +129,37 @@ export default function EmailForm() {
 				<Button onClick={handleToast} className="rounded-lg justify-self-end w-full sm:w-[3.625rem] sm:h-[2.125rem] bg-gradient-to-r from-linear-blue-from  to-linear-blue-to flex gap-3 px-1.5 py-0.5">Send</Button>
 			</div>
 		</div>
+	)
+}
+function StatusList({
+	setOpen,
+	setSelectedSender,
+}: {
+	setOpen: (open: boolean) => void
+	setSelectedSender: (sender: Sender | null) => void
+}) {
+	return (
+		<Command>
+			<CommandInput placeholder="Filter status..." />
+			<CommandList>
+				<CommandEmpty>No results found.</CommandEmpty>
+				<CommandGroup>
+					{senders.map((sender, idx) => (
+						<CommandItem
+							key={idx}
+							value={sender.email}
+							onSelect={(sender) => {
+								setSelectedSender(
+									senders.find((priority) => priority.email === sender) || null
+								)
+								setOpen(false)
+							}}
+						>
+							{sender.name}
+						</CommandItem>
+					))}
+				</CommandGroup>
+			</CommandList>
+		</Command>
 	)
 }

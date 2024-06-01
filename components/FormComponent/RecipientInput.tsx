@@ -1,40 +1,32 @@
 'use client'
-
-import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
-import { Badge } from "../ui/badge";
 import { toast } from "sonner";
 
+import {
+	Command,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+	CommandList,
+} from "@/components/ui/command"
+import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
+
 interface RecipientInputProps {
-	recipients: string[];
-	addRecipient: (email: string) => void;
-	removeRecipient: (email: string) => void;
+	recipients: { email: string, id: number }[];
+	addRecipient: (value: { email: string, id: number }) => void;
+	removeRecipient: (value: { email: string, id: number }) => void;
 	recipientInputOpen: boolean;
 	setRecipientInputOpen: (value: boolean) => void
+	toggleCC: number;
+	setToggleCC: (value: number) => void;
 }
 
-function XIcon(props: any) {
-	return (
-		<svg
-			{...props}
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		>
-			<path d="M18 6 6 18" />
-			<path d="m6 6 12 12" />
-		</svg>
-	);
-}
 
-export default function RecipientInput({ recipients, addRecipient, removeRecipient, recipientInputOpen, setRecipientInputOpen }: RecipientInputProps) {
+
+
+export default function RecipientInput({ toggleCC, setToggleCC, recipients, addRecipient, removeRecipient, recipientInputOpen, setRecipientInputOpen }: RecipientInputProps) {
 
 
 	return (
@@ -51,70 +43,50 @@ export default function RecipientInput({ recipients, addRecipient, removeRecipie
 								<span> {recipients.length > 0 ? recipients.length : 128} individual recipients</span>
 							</Button>
 						</PopoverTrigger>
-						<PopoverContent className=" max-w-md bg-graylight2 rounded-md p-4 border">
-							<div className="space-y-2">
-								<h3 className="text-sm">Add Recipient</h3>
-								<div className="flex items-center gap-2">
-									<Input
-										id="to"
-										className="flex-1 block shadow-sm sm:text-sm border-graylight6 rounded-md"
-										placeholder="Enter email address"
-										onKeyDown={(e: any) => {
-											if (e.key === "Enter") {
-												addRecipient(e.target.value)
-												e.target.value = ""
-											}
-										}}
-									/>
-									<Button
-										type="button"
-										className="bg-linear-blue-from hover:bg-linear-blue-to"
-										onClick={() => {
-											const inputElement = document.getElementById("to") as HTMLInputElement;
-											const email = inputElement.value
-											if (email) {
-												addRecipient(email)
-												toast("Email added", { description: `Email ${email} has been added` })
-											}
-										}}
-									>
-										Add
-									</Button>
-								</div>
-								<div className="grid gap-3 max-h-60 overflow-y-auto">
-									{recipients.map((email, index) => (
-										<Badge
-											key={index}
-											className=" rounded-md px-3 py-1 text-sm flex items-center justify-between text-graylight11 font-normal"
-											variant="outline"
-										>
-											{email}
-											<button
-												type="button"
-												className="ml-2 text-graylight6 hover:text-graylight11 "
-												onClick={() => {
-													removeRecipient(email);
-													toast("Email removed", { description: `Email ${email} has been removed from the list` })
-												}}
+						<PopoverContent className="w-md p-0 text-graylight6 shadow-custom">
+							<Command shouldFilter={false}>
+								<CommandInput
+									onKeyDown={(e: any) => {
+										if (e.key === "Enter") {
+											addRecipient({ email: e.target.value, id: recipients.length + 1 })
+											e.target.value = ""
+										}
+									}}
+									placeholder="Type the email and press Enter" />
+								<CommandList>
+									<CommandGroup>
+										{recipients.map((recipient, idx) => (
+											<CommandItem
+												key={idx}
+												value={recipient.email}
+												className="flex justify-between group text-graylight11 hover:cursor-pointer "
 											>
-												<XIcon className="w-4 h-4" />
-											</button>
-										</Badge>
-									))}
-								</div>
-							</div>
+												{recipient.email}
+												<X
+													size={17}
+													className="group-hover:text-graylight11 text-graylight2"
+													onClick={() => {
+														removeRecipient(recipient);
+														toast("Email removed", { description: `Email ${recipient.email} has been removed from the list` })
+													}}
+												/>
+											</CommandItem>
+										))}
+									</CommandGroup>
+								</CommandList>
+							</Command>
 						</PopoverContent>
 					</Popover>
 				</div>
 			</div>
 			<div className="flex sm:justify-end md:col-span-2 h-26px ">
-				<Button variant="ghost" className=" h-[26px] px-1.5 text-sm" size={"sm"}>
+				<Button onClick={() => setToggleCC(1)} variant="ghost" className={cn(`h-[26px] px-1.5 text-sm`, toggleCC === 1 ? "bg-graylight6" : "bg-inherit")} size={"sm"}>
 					Cc
 				</Button>
-				<Button variant="ghost" className="text-sm px-1.5 h-[26px]" size={"sm"}>
+				<Button onClick={() => setToggleCC(2)} variant="ghost" className={cn("text-sm px-1.5 h-[26px] ", toggleCC === 2 ? "bg-graylight6" : "bg-inherit")} size={"sm"}>
 					Bcc
 				</Button>
 			</div>
-		</div>
+		</div >
 	)
 }
