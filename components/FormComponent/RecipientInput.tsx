@@ -48,7 +48,7 @@ export default function RecipientInput({ recipients, addRecipient, removeRecipie
 					<Popover open={recipientInputOpen} onOpenChange={setRecipientInputOpen}>
 						<PopoverTrigger asChild className="h-[24px]">
 							<Button variant="ghost" className="flex items-center justify-between px-1.5 py-0.5 rounded-md text-sm font-normal">
-								<span> {recipients.length > 0 ? recipients.length : 128} individual participants</span>
+								<span> {recipients.length > 0 ? recipients.length : 128} individual recipients</span>
 							</Button>
 						</PopoverTrigger>
 						<PopoverContent className=" max-w-md bg-graylight2 rounded-md p-4 border">

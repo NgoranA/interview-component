@@ -43,21 +43,14 @@ export default function EmailForm() {
 				description: "All fields are compulsary"
 			})
 		} else {
+			setRecipients([]),
+				setMessage(""),
+				setSubject("")
+			setSelectedSender(undefined)
 			toast("Email Sent", {
-				description: `
-          Email sent successfully!
-		    <br />
-          From: ${selectedSender}
-          <br />
-          To: ${recipients.join(", ")}
-          <br />
-          Subject: ${subject}
-          <br />
-          Message: ${message}
-        `,
+				description: "Email sent successfully",
 				duration: 3000
-			}
-			)
+			})
 		}
 	}
 
