@@ -9,9 +9,9 @@ import RecipientInput from "./RecipientInput";
 import emails from "@/lib/emails";
 import { toast } from "sonner";
 
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Plus } from "lucide-react";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../../ui/command";
 
 
 type Sender = {
@@ -62,7 +62,7 @@ export default function EmailForm() {
 	}
 
 	const removeRecipient = (recipient: { email: string, id: number }) => {
-		setRecipients(recipients.filter((r) => r !== recipient.email));
+		setRecipients(recipients.filter((r) => r.email !== recipient.email));
 	};
 
 	const handleToast = () => {
@@ -110,7 +110,7 @@ export default function EmailForm() {
 					<Input
 						value={subject}
 						onChange={(e) => setSubject(e.target.value)}
-						placeholder="Email Subject..." id="subject" className=" h-7 border-0 hover:bg-white bg-inherit outline-0 col-span-3" />
+						placeholder="Email Subject..." id="subject" className=" h-7 hover:bg-white bg-inherit outline-none col-span-3" />
 				</div>
 				<hr className="border-t-graylight6" />
 				<div className="w-full h-full">
@@ -120,13 +120,13 @@ export default function EmailForm() {
 					<Textarea
 						id="message"
 						placeholder="Mention fields with '@' and write your message"
-						className="resize-none focus:ring-0 focus:border overflow-hidden bg-white w-full p-3 rounded-xl border-0 shadow-sm"
+						className="resize-none outline-none overflow-hidden bg-white w-full p-3 rounded-xl focus:outline-none shadow-sm"
 						rows={14}
 						value={message}
 						onChange={(e) => setMessage(e.target.value)}
 					/>
 				</div>
-				<Button onClick={handleToast} className="rounded-lg justify-self-end w-full sm:w-[3.625rem] sm:h-[2.125rem] bg-gradient-to-r from-linear-blue-from  to-linear-blue-to flex gap-3 px-1.5 py-0.5">Send</Button>
+				<Button onClick={handleToast} className="rounded-lg focus:ring-0 justify-self-end w-full sm:w-[3.625rem] sm:h-[2.125rem] bg-gradient-to-r from-linear-blue-from  to-linear-blue-to flex gap-3 px-1.5 py-0.5">Send</Button>
 			</div>
 		</div>
 	)

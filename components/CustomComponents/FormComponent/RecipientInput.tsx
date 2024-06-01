@@ -1,5 +1,5 @@
 'use client'
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
 import { toast } from "sonner";
 
@@ -46,6 +46,7 @@ export default function RecipientInput({ toggleCC, setToggleCC, recipients, addR
 						<PopoverContent className="w-md p-0 text-graylight6 shadow-custom">
 							<Command shouldFilter={false}>
 								<CommandInput
+									className="outline-none"
 									onKeyDown={(e: any) => {
 										if (e.key === "Enter") {
 											addRecipient({ email: e.target.value, id: recipients.length + 1 })
